@@ -33,13 +33,26 @@ def main(stdscr):
 
         time.sleep(60)
 
+def getCurrencyList():
+    r = requests.get('https://api.coindesk.com/v1/bpi/supported-currencies.json')
+
+    return r.json()
+
 if __name__ == "__main__":
-    options, remainder = getopt.getopt(sys.argv[1:], 'c:h', ['currency=','help'])
+    options, remainder = getopt.getopt(sys.argv[1:], 'c:hl', ['currency=','help','list'])
+    
     for opt, arg in options:
         if opt in ('-c', '--currency'):
             currency = arg
-        elif opt == '--help':
-            println('example: ticker.py -c GBP')
+        
+        if opt in ('-l', '--list'):
+            for c in getCurrencyList():
+                print(c['currency'] + ": " + c['country'])
+            exit()
+        
+        elif opt in ('-h', '--help'):
+            print('example: ticker.py -c GBP')
+            print(' -l or --list to list all available currencies')
             exit()
 
     curses.wrapper(main)
