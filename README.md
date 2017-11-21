@@ -8,5 +8,6 @@ Updates every 60 seconds.
 
 usage:
 
-`python ticker.py -c USD`
+`python ticker.py -c USD`  
+
 `-l or --list to list all available currencies.`
