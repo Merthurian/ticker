@@ -1,6 +1,6 @@
 ## ticker.py
 
-A Bitcoin price ticker for the command line. Intended to be run inside a tmux window.
+A Bitcoin price ticker for the command line. Intended to be run inside a tmux pane.
 
 Default is GBP. Use any currency supported by the coindesk api.
 
