@@ -12,4 +12,4 @@ usage:
 
 `-l` or `--list` to list all available currencies.  
 
-`-m [number]` or `--mycoins=[number]` 
+`-m [number]` or `--mycoins=[number]` to display the value of your coins.
