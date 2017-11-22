@@ -23,13 +23,15 @@ def mapValue(value, inMin, inMax, outMin, outMax):
     return outMin + (valueScaled * outSpan)
 
 def drawGraph(stdscr, width, height):
+
+    price_history_draw = price_history[-width:]
     
-    low = min(price_history)
-    high = max(price_history)
+    low = min(price_history_draw)
+    high = max(price_history_draw)
   
     price_squashed = []
 
-    for price in price_history:
+    for price in price_history_draw:
         price_squashed.append(mapValue(price, low, high, height, 1))
     
     price_squashed = price_squashed[-width:]
