@@ -11,6 +11,36 @@ import getopt
 currency = 'GBP'
 my_coins = 0.0
 
+price_history = []
+
+def mapValue(value, inMin, inMax, outMin, outMax):
+    
+    inSpan = inMax + 0.001 - inMin - 0.001
+    outSpan = outMax - outMin
+
+    valueScaled = float(value - inMin) / float(inSpan)
+
+    return outMin + (valueScaled * outSpan)
+
+def drawGraph(stdscr, width, height):
+    
+    low = min(price_history)
+    high = max(price_history)
+  
+    price_squashed = []
+
+    for price in price_history:
+        price_squashed.append(mapValue(price, low, high, height, 1))
+    
+    price_squashed = price_squashed[-width:]
+
+    i = 0
+
+    for price in price_squashed:
+        stdscr.move(int(price), i)
+        stdscr.addch('+')
+        i = i + 1
+
 def main(stdscr):
         
     curses.curs_set(0)
@@ -26,6 +56,10 @@ def main(stdscr):
         r = requests.get(url)
         
         fPrice = float(r.json()['bpi'][currency]['rate'].replace(',',''))
+        price_history.append(fPrice)
+        while len(price_history) > 1000:
+            price_history.pop(0)
+
         sPrice = "{0:.2f}".format(fPrice)
 
         fMyValue = fPrice * my_coins
@@ -35,7 +69,9 @@ def main(stdscr):
             stdscr.addstr(sPrice)
         else:
             stdscr.addstr(sPrice + " " + sMyMalue)
-                
+           
+        drawGraph(stdscr, width, height)
+
         stdscr.refresh()
 
         time.sleep(60)
