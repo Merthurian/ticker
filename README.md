@@ -10,4 +10,6 @@ usage:
 
 `python ticker.py -c USD`  
 
-`-l or --list to list all available currencies.`
+`-l` or `--list` to list all available currencies.  
+
+`-m [number]` or `--mycoins=[number]` 

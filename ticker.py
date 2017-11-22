@@ -9,6 +9,7 @@ import sys
 import getopt
 
 currency = 'GBP'
+my_coins = 0.0
 
 def main(stdscr):
         
@@ -27,7 +28,13 @@ def main(stdscr):
         fPrice = float(r.json()['bpi'][currency]['rate'].replace(',',''))
         sPrice = "{0:.2f}".format(fPrice)
 
-        stdscr.addstr(sPrice)
+        fMyValue = fPrice * my_coins
+        sMyMalue = "{0:.2f}".format(fMyValue)
+
+        if my_coins == 0.0:
+            stdscr.addstr(sPrice)
+        else:
+            stdscr.addstr(sPrice + " " + sMyMalue)
                 
         stdscr.refresh()
 
@@ -39,7 +46,7 @@ def getCurrencyList():
     return r.json()
 
 if __name__ == "__main__":
-    options, remainder = getopt.getopt(sys.argv[1:], 'c:hl', ['currency=','help','list'])
+    options, remainder = getopt.getopt(sys.argv[1:], 'c:hlm:', ['currency=','help','list','mycoins='])
     
     for opt, arg in options:
         if opt in ('-c', '--currency'):
@@ -50,6 +57,9 @@ if __name__ == "__main__":
                 print(c['currency'] + ": " + c['country'])
             exit()
         
+        if opt in ('-m' '--mycoins'):
+            my_coins = float(arg)
+
         elif opt in ('-h', '--help'):
             print('example: ticker.py -c GBP')
             print(' -l or --list to list all available currencies')
