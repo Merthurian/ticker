@@ -43,15 +43,7 @@ def drawGraph(stdscr, width, height):
         stdscr.addch('+')
         i = i + 1
 
-def main(stdscr):
-        
-    curses.curs_set(0)
-
-    while True:
-        stdscr.clear()
-        
-        height,width = stdscr.getmaxyx()
-        height -= 1
+def getPrice():
 
         url = 'https://api.coindesk.com/v1/bpi/currentprice/' + currency + '.json'
         
@@ -59,8 +51,29 @@ def main(stdscr):
         
         fPrice = float(r.json()['bpi'][currency]['rate'].replace(',',''))
         price_history.append(fPrice)
+        
         while len(price_history) > 1000:
             price_history.pop(0)
+
+        return fPrice
+
+def main(stdscr):
+        
+    curses.curs_set(0)
+
+    nextCheck = 0.0
+
+    fPrice = getPrice()
+
+    while True:
+        stdscr.clear()
+        
+        height,width = stdscr.getmaxyx()
+        height -= 1
+
+        if nextCheck < time.time():
+            fPrice = getPrice()
+            nextCheck = time.time() + 60.0
 
         sPrice = "{0:.2f}".format(fPrice)
 
@@ -76,7 +89,7 @@ def main(stdscr):
 
         stdscr.refresh()
 
-        time.sleep(60)
+        time.sleep(1)
 
 def getCurrencyList():
     r = requests.get('https://api.coindesk.com/v1/bpi/supported-currencies.json')
