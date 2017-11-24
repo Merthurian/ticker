@@ -34,7 +34,7 @@ def drawGraph(stdscr, width, height):
     for price in price_history_draw:
         price_squashed.append(mapValue(price, low, high, height, 1))
     
-    price_squashed = price_squashed[-width:]
+    price_squashed = price_squashed[-(width-1):]
 
     i = 0
 
