@@ -60,10 +60,20 @@ def getPrice():
 def main(stdscr):
         
     curses.curs_set(0)
+    curses.start_color()
+    curses.use_default_colors()
 
     nextCheck = 0.0
 
     fPrice = getPrice()
+    
+    currency_symbols = {'USD' : '$',
+            'GBP' : curses.ACS_STERLING}
+    
+    currency_symbol = curses.ACS_DIAMOND
+
+    if currency in currency_symbols:
+        currency_symbol = currency_symbols[currency]
 
     while True:
         stdscr.clear()
@@ -75,15 +85,18 @@ def main(stdscr):
             fPrice = getPrice()
             nextCheck = time.time() + 60.0
 
-        sPrice = "{0:.2f}".format(fPrice)
-
+        sPrice = "{0:,.2f}".format(fPrice)
         fMyValue = fPrice * my_coins
-        sMyMalue = "{0:.2f}".format(fMyValue)
+        sMyValue = "{0:,.2f}".format(fMyValue)
 
-        if my_coins == 0.0:
-            stdscr.addstr(sPrice)
-        else:
-            stdscr.addstr(sPrice + " " + sMyMalue)
+        stdscr.addch(currency_symbol)
+
+        stdscr.addstr(sPrice)
+        
+        if my_coins != 0.0:
+            stdscr.addstr(" - ")
+            stdscr.addch(currency_symbols[currency])
+            stdscr.addstr(sMyValue)
            
         drawGraph(stdscr, width, height)
 
