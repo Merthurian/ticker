@@ -114,7 +114,7 @@ if __name__ == "__main__":
     
     for opt, arg in options:
         if opt in ('-c', '--currency'):
-            currency = arg
+            currency = arg.upper()
         
         if opt in ('-l', '--list'):
             for c in getCurrencyList():
