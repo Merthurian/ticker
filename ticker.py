@@ -11,6 +11,9 @@ import getopt
 currency = 'GBP'
 my_coins = 0.0
 
+low = 0.0
+high = 0.0
+
 price_history = []
 
 def mapValue(value, inMin, inMax, outMin, outMax):
@@ -26,13 +29,15 @@ def drawGraph(stdscr, width, height):
 
     price_history_draw = price_history[-width:]
     
+    global low, high
+
     low = min(price_history_draw)
     high = max(price_history_draw)
   
     price_squashed = []
 
     for price in price_history_draw:
-        price_squashed.append(mapValue(price, low, high, height, 1))
+        price_squashed.append(mapValue(price, low, high, height-1, 2))
     
     price_squashed = price_squashed[-(width-1):]
 
@@ -44,18 +49,16 @@ def drawGraph(stdscr, width, height):
         i = i + 1
 
 def getPrice():
+    url = 'https://api.coindesk.com/v1/bpi/currentprice/' + currency + '.json'
+    r = requests.get(url)
+     
+    fPrice = float(r.json()['bpi'][currency]['rate'].replace(',',''))
+    price_history.append(fPrice)
+        
+    while len(price_history) > 1000:
+        price_history.pop(0)
 
-        url = 'https://api.coindesk.com/v1/bpi/currentprice/' + currency + '.json'
-        
-        r = requests.get(url)
-        
-        fPrice = float(r.json()['bpi'][currency]['rate'].replace(',',''))
-        price_history.append(fPrice)
-        
-        while len(price_history) > 1000:
-            price_history.pop(0)
-
-        return fPrice
+    return fPrice
 
 def main(stdscr):
         
@@ -64,8 +67,6 @@ def main(stdscr):
     curses.use_default_colors()
 
     nextCheck = 0.0
-
-    fPrice = getPrice()
     
     currency_symbols = {'USD' : '$',
             'GBP' : curses.ACS_STERLING}
@@ -89,16 +90,27 @@ def main(stdscr):
         fMyValue = fPrice * my_coins
         sMyValue = "{0:,.2f}".format(fMyValue)
 
+        sLow = "{0:,.2f}".format(low)
+        sHigh = "{0:,.2f}".format(high)
+
         stdscr.addch(currency_symbol)
 
         stdscr.addstr(sPrice)
-        
+
         if my_coins != 0.0:
             stdscr.addstr(" - ")
             stdscr.addch(currency_symbols[currency])
             stdscr.addstr(sMyValue)
            
         drawGraph(stdscr, width, height)
+
+        stdscr.move(1,0)
+        stdscr.addch(currency_symbol)
+        stdscr.addstr(sHigh)
+
+        stdscr.move(height,0)
+        stdscr.addch(currency_symbol)
+        stdscr.addstr(sLow)
 
         stdscr.refresh()
 
