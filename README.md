@@ -13,3 +13,5 @@ usage:
 `-l` or `--list` to list all available currencies.  
 
 `-m [number]` or `--mycoins=[number]` to display the value of your coins.
+
+`-t [number]` or `--time [number]` set the refresh frequency in seconds. Default is 60
