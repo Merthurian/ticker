@@ -10,6 +10,7 @@ import getopt
 
 currency = 'GBP'
 my_coins = 0.0
+refresh = 60.0
 
 low = 0.0
 high = 0.0
@@ -84,7 +85,7 @@ def main(stdscr):
 
         if nextCheck < time.time():
             fPrice = getPrice()
-            nextCheck = time.time() + 60.0
+            nextCheck = time.time() + refresh
 
         sPrice = "{0:,.2f}".format(fPrice)
         fMyValue = fPrice * my_coins
@@ -122,7 +123,7 @@ def getCurrencyList():
     return r.json()
 
 if __name__ == "__main__":
-    options, remainder = getopt.getopt(sys.argv[1:], 'c:hlm:', ['currency=','help','list','mycoins='])
+    options, remainder = getopt.getopt(sys.argv[1:], 'c:hlmt:', ['currency=','help','list','mycoins=','time'])
     
     for opt, arg in options:
         if opt in ('-c', '--currency'):
@@ -132,7 +133,10 @@ if __name__ == "__main__":
             for c in getCurrencyList():
                 print(c['currency'] + ": " + c['country'])
             exit()
-        
+       
+	if opt in('-t', '--time'):
+	    refresh = float(arg)
+ 
         if opt in ('-m' '--mycoins'):
             my_coins = float(arg)
 
