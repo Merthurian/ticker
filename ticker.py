@@ -10,7 +10,7 @@ import getopt
 
 currency = 'GBP'
 my_coins = 0.0
-refresh = 20.0
+refresh = 60.0
 
 low = 0.0
 high = 0.0
